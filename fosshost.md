@@ -1,5 +1,7 @@
 # Setup guide for the FossHost server
 
+- <https://www.cloudbooklet.com/how-to-install-lamp-apache-mysql-php-on-debian-11/>
+
 ## System software
 
 ```
