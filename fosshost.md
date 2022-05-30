@@ -5,7 +5,7 @@
 ## System software
 
 ```
-apt install -y emacs screen vim
+apt install -y curl git emacs mercurial screen vim
 ```
 
 ## Fix Debian /sbin directory
@@ -42,10 +42,10 @@ apt install -y fail2ban
 
 ```
 
-## Apache
+## Apache LAMP stack
 
 ```
-apt install -y apache2
+apt install -y apache2 mariadb-server php php-mysql libapache2-mod-php php-xml php-mbstring
 a2enmod rewrite
 a2enmod ssl
 ```
@@ -61,5 +61,15 @@ snap install --classic certbot
 
 ## MediaWiki
 
+<https://www.mediawiki.org/wiki/Manual:Running_MediaWiki_on_Debian_or_Ubuntu>
+
 ```
+apt install -y php-apcu php-intl imagemagick inkscape php-gd php-cli php-curl php-bcmath
+
+mysql_secure_installation  # Set root password, follow the steps
+mysql -u root -p           # Setup like described in the installation manual.
+                           # Check LocalSettings.php for data.
+
+cd /var/www/wiki.octave.org
+wget https://releases.wikimedia.org/mediawiki/1.35/mediawiki-1.35.6.tar.gz
 ```
