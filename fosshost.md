@@ -48,6 +48,7 @@ apt install -y fail2ban
 apt install -y apache2 mariadb-server php php-mysql libapache2-mod-php php-xml php-mbstring
 a2enmod rewrite
 a2enmod ssl
+a2enmod cgi
 ```
 
 ## CertBot
@@ -79,6 +80,11 @@ Install following skins and plugins:
 - https://www.mediawiki.org/wiki/Extension:Math
 - https://www.mediawiki.org/wiki/Extension:MobileFrontend
 - https://www.mediawiki.org/wiki/Extension:PageNotice
-- 
 
+Import `mysqldump`-backup back to database and run `maintenence/update.php`.
 
+## hg.octave.org - Mercurial repositories
+
+```
+cp /usr/share/doc/mercurial-common/examples/hgweb.wsgi /var/www/hg.octave.org/
+```
