@@ -86,5 +86,24 @@ Import `mysqldump`-backup back to database and run `maintenence/update.php`.
 ## hg.octave.org - Mercurial repositories
 
 ```
-cp /usr/share/doc/mercurial-common/examples/hgweb.wsgi /var/www/hg.octave.org/
+mkdir -p /var/www/hg.octave.org/repos
+cp /usr/share/doc/mercurial-common/examples/hgweb.cgi /var/www/hg.octave.org/
+cd /var/www/hg.octave.org/
+```
+Create `hgweb.config` with the following content:
+```
+[paths]
+/ = /var/www/hg.octave.org/repos/*
+
+[web]
+encoding = utf-8
+allow_archive = zip, gz, bz2
+
+[extensions]
+highlight =
+```
+Further in each repository, e.g. `/var/www/hg.octave.org/repos/web-octave/.hg/hgrc` one can enter information like:
+```
+[web]
+description = Repository moved to https://github.com/gnu-octave/gnu-octave.github.io
 ```
