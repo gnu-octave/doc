@@ -85,6 +85,9 @@ Import `mysqldump`-backup back to database and run `maintenence/update.php`.
 
 ## hg.octave.org - Mercurial repositories
 
+- <https://www.mercurial-scm.org/wiki/PublishingRepositories#Configuring_Apache>
+- <http://510x.se/notes/posts/Install_Mercurial_and_hgweb_on_a_Debian-based_system/>
+
 ```
 mkdir -p /var/www/hg.octave.org/repos
 cp /usr/share/doc/mercurial-common/examples/hgweb.cgi /var/www/hg.octave.org/
