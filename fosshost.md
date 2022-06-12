@@ -5,7 +5,7 @@
 ## System software
 
 ```
-apt install -y curl emacs git htop mercurial screen vim zip
+apt install -y bundler curl emacs git htop mercurial screen vim zip
 ```
 
 ## Fix Debian /sbin directory
