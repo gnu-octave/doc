@@ -136,7 +136,7 @@ after 24h this mistake is synchonized with Dreamhost as well.
 Therefore we seek to have a little history of backups with the help of **rsnapshot**.
 
 Compile and install in userspace `./configure --prefix=$HOME`
-[rsnapshot](https://github.com/rsnapshot/rsnapshot/blob/master/INSTALL.md)
+[rsnapshot](https://github.com/rsnapshot/rsnapshot/blob/master/INSTALL.md).
 
 Create a file `/home/gnuoctave/etc/rsnapshot/fosshost.conf`
 and replace **EVERY** space with a tab:
