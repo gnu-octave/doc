@@ -110,3 +110,70 @@ Further in each repository, e.g. `/var/www/hg.octave.org/repos/web-octave/.hg/hg
 [web]
 description = Repository moved to https://github.com/gnu-octave/gnu-octave.github.io
 ```
+
+## Backup
+
+The backup of the Fosshost server is sent daily to the Dreamhost server from jwe.
+
+### Fosshost side
+
+Run the script `/root/bin/backup-to-dreamhost.sh` in a daily cronjob:
+
+```
+# Code to backup the wiki
+
+rsync -az --delete /root/backup/octave-wiki.*.gz \
+      gnuoctave@backup.octave.org:/home/gnuoctave/backup/fosshost/wiki
+rsync -az --delete /var/www/ \
+      gnuoctave@backup.octave.org:/home/gnuoctave/backup/fosshost/web
+```
+
+### Dreamhost side
+
+Just sending the latest Fosshost server state to Dreamhost is not failsafe enough.
+If some bad deletion happens on Fosshost,
+after 24h this mistake is synchonized with Dreamhost as well.
+Therefore we seek to have a little history of backups with the help of **rsnapshot**.
+
+Compile and install in userspace `./configure --prefix=$HOME`
+[rsnapshot](https://github.com/rsnapshot/rsnapshot/blob/master/INSTALL.md)
+
+Create a file `/home/gnuoctave/etc/rsnapshot/fosshost.conf`
+and replace **EVERY** space with a tab:
+```
+config_version 1.2
+snapshot_root /home/gnuoctave/backup/fosshost_snapshots/
+cmd_cp /bin/cp
+cmd_rm /bin/rm
+cmd_rsync /usr/bin/rsync
+cmd_ssh /usr/bin/ssh
+cmd_logger /usr/bin/logger
+cmd_du  /usr/bin/du
+interval daily 7
+interval weekly 4
+interval monthly 3
+verbose 2
+loglevel 4
+logfile /home/gnuoctave/backup/logs/rsnapshot.log
+rsync_long_args --delete --numeric-ids --delete-excluded
+lockfile /home/gnuoctave/backup/rsnapshot.pid
+backup /home/gnuoctave/backup/fosshost/ fosshost_snapshots/
+```
+Finally test the configuration file:
+```
+/home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf configtest
+```
+Establish a cronjob:
+```
+###################################################################
+#minute (0-59),                                                   #
+#|    hour (0-23),                                                #
+#|    |        day of the month (1-31),                           #
+#|    |        |       month of the year (1-12),                  #
+#|    |        |       |       day of the week (0-6 with 0=Sunday)#
+#|    |        |       |       |       commands                   #
+###################################################################
+10    01       *       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf daily
+10    02       *       *       0        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf weekly
+10    03       1       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf monthly
+```
