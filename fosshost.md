@@ -157,7 +157,7 @@ loglevel 4
 logfile /home/gnuoctave/backup/logs/rsnapshot.log
 rsync_long_args --delete --numeric-ids --delete-excluded
 lockfile /home/gnuoctave/backup/rsnapshot.pid
-backup /home/gnuoctave/backup/fosshost/ fosshost_snapshots/
+backup /home/gnuoctave/backup/fosshost/ fosshost/
 ```
 Finally test the configuration file:
 ```
