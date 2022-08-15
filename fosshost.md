@@ -54,7 +54,7 @@ a2enmod cgi
 ## CertBot
 
 ```
-apt install -y snapd
+apt install -y snapd python3-augeas
 snap install core
 snap refresh core
 snap install --classic certbot
