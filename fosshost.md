@@ -49,6 +49,8 @@ apt install -y apache2 mariadb-server php php-mysql libapache2-mod-php php-xml p
 a2enmod rewrite
 a2enmod ssl
 a2enmod cgi
+a2enmod proxy_http
+a2enmod proxy_wstunnel
 ```
 
 ## CertBot
@@ -176,4 +178,22 @@ Establish a cronjob:
 10    01       *       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf daily
 10    02       *       *       0        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf weekly
 10    03       1       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf monthly
+```
+
+## buildbot.octave.org
+
+```
+apt install --no-install-recommends buildbot
+pip install buildbot_www buildbot_waterfall_view
+```
+
+Edited the `/etc/default/buildbot` file and install the following files in the /var/lib/buildbot/masters/octave directory, all owned by the buildbot user and group:
+- `buildbot.tac` - managed at https://hg.octave.org/octave-buildbot
+- `master.cfg` - managed at https://hg.octave.org/octave-buildbot
+- `octave_buildbot_config.py` - has some password info for each worker so it is not in the mercurial archive with the other config files
+- `state.sqlite` (copied from the old digital ocean buildbot server)
+
+Unmask the systemd buildbot service and now starting the buildbot server with
+```
+/etc/init.d/buildbot restart
 ```
