@@ -47,6 +47,33 @@ snap refresh core
 snap install --classic certbot
 ```
 
+## ´/var/www´ setup
+
+In general permissions are `chown -R root:www-data *` with 755 (directory) 644 (file) permissions.
+
+```
+bugs.octave.org
+buildbot.octave.org
+docs.octave.org
+ftp.octave.org
+hg.octave.org
+html
+  not used
+mxe-pkg-src.octave.org
+packages.octave.org
+  ´chmod g+w .´ to enable writing of ´cache.txt´-file by php
+wiki.octave.org
+www.octave.org
+```
+
+## ´/etc/apache/sites-available´ setup
+
+- Copy Apache config files from this repo `2022-10-29-digital-ocean-apache2-configs` to `/etc/apache/sites-available` (e.g. SFTP program).
+- Enable all sites `a2ensite /etc/apache/sites-available/0*.conf` (symlinks to `/etc/apache/sites-enabled`).
+- `systemctl restart apache2`
+- Check configuration `apache2ctl -S`.
+- Get Let's Encrypt certificates `/snap/bin/certbot --apache`
+
 ## MediaWiki
 
 <https://www.mediawiki.org/wiki/Manual:Running_MediaWiki_on_Debian_or_Ubuntu>
