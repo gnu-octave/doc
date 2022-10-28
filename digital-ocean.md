@@ -8,31 +8,16 @@
 apt install -y bundler curl emacs git htop mercurial screen vim zip
 ```
 
-## Fix Debian /sbin directory
-
-Add to `/root/.bashrc`:
-```
-PATH=$PATH:/sbin:
-```
-
 ## Harddisk setup
 
 ```
-fdisk     /dev/sdb  # create partition table
-mkfs.ext4 /dev/sdb1
-vim /etc/fstab      # arrange mountpoint like below
-```
-
-```
 # lsblk 
-NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda      8:0    0   64G  0 disk 
-├─sda1   8:1    0   63G  0 part /
-├─sda2   8:2    0    1K  0 part 
-└─sda5   8:5    0  975M  0 part [SWAP]
-sdb      8:16   0  500G  0 disk 
-└─sdb1   8:17   0  500G  0 part /var/www
-sr0     11:0    1  378M  0 rom 
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+vda     254:0    0   80G  0 disk 
+├─vda1  254:1    0 79.9G  0 part /
+├─vda14 254:14   0    3M  0 part 
+└─vda15 254:15   0  124M  0 part /boot/efi
+vdb     254:16   0  474K  1 disk 
 ```
 
 ## Fail2Ban - Firewall
@@ -117,7 +102,7 @@ description = Repository moved to https://github.com/gnu-octave/gnu-octave.githu
 
 The backup of the Fosshost server is sent daily to the Dreamhost server from jwe.
 
-### Fosshost side
+### Digital Ocean side
 
 Run the script `/root/bin/backup-to-dreamhost.sh` in a daily cronjob:
 
