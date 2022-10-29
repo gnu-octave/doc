@@ -47,7 +47,7 @@ snap refresh core
 snap install --classic certbot
 ```
 
-## ´/var/www´ setup
+## `/var/www` setup
 
 In general permissions are `chown -R root:www-data *` with 755 (directory) 644 (file) permissions.
 
@@ -61,12 +61,12 @@ html
   not used
 mxe-pkg-src.octave.org
 packages.octave.org
-  ´chmod g+w .´ to enable writing of ´cache.txt´-file by php
+  `chmod g+w .` to enable writing of ´cache.txt´-file by php
 wiki.octave.org
 www.octave.org
 ```
 
-## ´/etc/apache/sites-available´ setup
+## `/etc/apache/sites-available` setup
 
 - Copy Apache config files from this repo `2022-10-29-digital-ocean-apache2-configs` to `/etc/apache/sites-available` (e.g. SFTP program).
 - Enable all sites `a2ensite /etc/apache/sites-available/0*.conf` (symlinks to `/etc/apache/sites-enabled`).
@@ -82,7 +82,7 @@ www.octave.org
 apt install -y php-apcu php-intl imagemagick inkscape php-gd php-cli php-curl php-bcmath
 
 mysql_secure_installation  # Set root password, follow the steps
-mysql -u root -p           # Setup like described in the installation manual.
+mysql -u root              # Setup like described in the installation manual.
                            # Check LocalSettings.php for data.
 
 cd /var/www/wiki.octave.org
