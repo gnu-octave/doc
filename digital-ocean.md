@@ -137,7 +137,7 @@ description = Repository moved to https://github.com/gnu-octave/gnu-octave.githu
 #|    |        |       |       |       commands                   #
 ###################################################################
 */5   *        *       *       *        /root/bin/sync-repos.sh
- 5    0        *       *       *        /root/bin/backup-to-dreamhost.sh
+ 5    0        *       *       *        /root/bin/backup-to-digitialocean.sh
 ```
 
 The script `/root/bin/sync-repos.sh`:
@@ -165,9 +165,9 @@ Run the script `/root/bin/backup-to-dreamhost.sh` in a daily cronjob:
 # Code to backup the wiki
 
 rsync -az --delete /root/backup/octave-wiki.*.gz \
-      gnuoctave@backup.octave.org:/home/gnuoctave/backup/fosshost/wiki
+      gnuoctave@backup.octave.org:/home/gnuoctave/backup/digitialocean/wiki
 rsync -az --delete /var/www/ \
-      gnuoctave@backup.octave.org:/home/gnuoctave/backup/fosshost/web
+      gnuoctave@backup.octave.org:/home/gnuoctave/backup/digitialocean/web
 ```
 
 ### Dreamhost side
@@ -180,11 +180,11 @@ Therefore we seek to have a little history of backups with the help of **rsnapsh
 Compile and install in userspace `./configure --prefix=$HOME`
 [rsnapshot](https://github.com/rsnapshot/rsnapshot/blob/master/INSTALL.md).
 
-Create a file `/home/gnuoctave/etc/rsnapshot/fosshost.conf`
+Create a file `/home/gnuoctave/etc/rsnapshot/digitialocean.conf`
 and replace **EVERY** space with a tab:
 ```
 config_version 1.2
-snapshot_root /home/gnuoctave/backup/fosshost_snapshots/
+snapshot_root /home/gnuoctave/backup/digitialocean_snapshots/
 cmd_cp /bin/cp
 cmd_rm /bin/rm
 cmd_rsync /usr/bin/rsync
@@ -199,11 +199,11 @@ loglevel 4
 logfile /home/gnuoctave/backup/logs/rsnapshot.log
 rsync_long_args --delete --numeric-ids --delete-excluded
 lockfile /home/gnuoctave/backup/rsnapshot.pid
-backup /home/gnuoctave/backup/fosshost/ fosshost/
+backup /home/gnuoctave/backup/digitialocean/ digitialocean/
 ```
 Finally test the configuration file:
 ```
-/home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf configtest
+/home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digitialocean.conf configtest
 ```
 Establish a cronjob:
 ```
@@ -215,9 +215,9 @@ Establish a cronjob:
 #|    |        |       |       day of the week (0-6 with 0=Sunday)#
 #|    |        |       |       |       commands                   #
 ###################################################################
-10    01       *       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf daily
-10    02       *       *       0        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf weekly
-10    03       1       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/fosshost.conf monthly
+10    01       *       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digitialocean.conf daily
+10    02       *       *       0        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digitialocean.conf weekly
+10    03       1       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digitialocean.conf monthly
 ```
 
 ## buildbot.octave.org
