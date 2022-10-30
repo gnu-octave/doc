@@ -125,6 +125,32 @@ Further in each repository, e.g. `/var/www/hg.octave.org/repos/web-octave/.hg/hg
 description = Repository moved to https://github.com/gnu-octave/gnu-octave.github.io
 ```
 
+## Cronjobs
+
+```
+###################################################################
+#minute (0-59),                                                   #
+#|    hour (0-23),                                                #
+#|    |        day of the month (1-31),                           #
+#|    |        |       month of the year (1-12),                  #
+#|    |        |       |       day of the week (0-6 with 0=Sunday)#
+#|    |        |       |       |       commands                   #
+###################################################################
+*/5   *        *       *       *        /root/bin/sync-repos.sh
+ 5    0        *       *       *        /root/bin/backup-to-dreamhost.sh
+```
+
+The script `/root/bin/sync-repos.sh`:
+```
+#!/bin/bash
+
+OCTAVE_REPO_DIR=/var/www/hg.octave.org/repos/octave
+
+cd ${OCTAVE_REPO_DIR}
+hg pull
+chown -R root:www-data ${OCTAVE_REPO_DIR}
+```
+
 ## Backup
 
 The backup of the Fosshost server is sent daily to the Dreamhost server from jwe.
@@ -134,6 +160,8 @@ The backup of the Fosshost server is sent daily to the Dreamhost server from jwe
 Run the script `/root/bin/backup-to-dreamhost.sh` in a daily cronjob:
 
 ```
+#!/bin/bash
+
 # Code to backup the wiki
 
 rsync -az --delete /root/backup/octave-wiki.*.gz \
