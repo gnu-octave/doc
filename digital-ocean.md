@@ -137,7 +137,7 @@ description = Repository moved to https://github.com/gnu-octave/gnu-octave.githu
 #|    |        |       |       |       commands                   #
 ###################################################################
 */5   *        *       *       *        /root/bin/sync-repos.sh
- 5    0        *       *       *        /root/bin/backup-to-digitialocean.sh
+ 5    0        *       *       *        /root/bin/backup-to-dreamhost.sh
 ```
 
 The script `/root/bin/sync-repos.sh`:
