@@ -159,16 +159,19 @@ The backup of the Fosshost server is sent daily to the Dreamhost server from jwe
 
 Run the script `/root/bin/backup-to-dreamhost.sh` in a daily cronjob:
 
-```
+```bash
 #!/bin/bash
 
-# Code to backup the wiki
+WIKI_DB_BACKUP_FILE=/var/www/wiki.octave.org/backup/octave-wiki.sql.gz
 
-rsync -az --delete /root/backup/octave-wiki.*.gz \
-      gnuoctave@backup.octave.org:/home/gnuoctave/backup/digitialocean/wiki
+rm -Rf ${WIKI_DB_BACKUP_FILE} 
+mysqldump -h hostname -u userid --password=password dbname \
+    | gzip > ${WIKI_DB_BACKUP_FILE}
+
 rsync -az --delete /var/www/ \
-      gnuoctave@backup.octave.org:/home/gnuoctave/backup/digitialocean/web
+    gnuoctave@backup.octave.org:/home/gnuoctave/backup/digitialocean/web
 ```
+Lookup the values for `mysqldump` in wiki's `LocalSettings.php` file.
 
 ### Dreamhost side
 
