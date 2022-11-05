@@ -148,12 +148,12 @@ OCTAVE_REPO_DIR=/var/www/hg.octave.org/repos/octave
 
 cd ${OCTAVE_REPO_DIR}
 hg pull
-chown -R root:www-data ${OCTAVE_REPO_DIR}
+chown -R mxe:mxe ${OCTAVE_REPO_DIR}
 ```
 
 ## Backup
 
-The backup of the Fosshost server is sent daily to the Dreamhost server from jwe.
+The backup of the Digital Ocean server is sent daily to the Dreamhost server from jwe.
 
 ### Digital Ocean side
 
@@ -175,8 +175,8 @@ Lookup the values for `mysqldump` in wiki's `LocalSettings.php` file.
 
 ### Dreamhost side
 
-Just sending the latest Fosshost server state to Dreamhost is not failsafe enough.
-If some bad deletion happens on Fosshost,
+Just sending the latest Digital Ocean server state to Dreamhost is not failsafe enough.
+If some bad deletion happens on Digital Ocean,
 after 24h this mistake is synchonized with Dreamhost as well.
 Therefore we seek to have a little history of backups with the help of **rsnapshot**.
 
