@@ -148,7 +148,7 @@ OCTAVE_REPO_DIR=/var/www/hg.octave.org/repos/octave
 
 cd ${OCTAVE_REPO_DIR}
 hg pull
-chown -R mxe:mxe ${OCTAVE_REPO_DIR}
+chown -R root:www-data ${OCTAVE_REPO_DIR}
 ```
 
 ## Backup
