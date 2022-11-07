@@ -125,6 +125,11 @@ Further in each repository, e.g. `/var/www/hg.octave.org/repos/web-octave/.hg/hg
 description = Repository moved to https://github.com/gnu-octave/gnu-octave.github.io
 ```
 
+Install [Pygments](https://pypi.org/project/Pygments/) for source code display:
+```
+pip install pygments
+```
+
 ## Cronjobs
 
 ```
