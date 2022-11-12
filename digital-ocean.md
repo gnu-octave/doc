@@ -174,7 +174,7 @@ mysqldump -h hostname -u userid --password=password dbname \
     | gzip > ${WIKI_DB_BACKUP_FILE}
 
 rsync -az --delete /var/www/ \
-    gnuoctave@backup.octave.org:/home/gnuoctave/backup/digitialocean/web
+    gnuoctave@backup.octave.org:/home/gnuoctave/backup/digital-ocean/web
 ```
 Lookup the values for `mysqldump` in wiki's `LocalSettings.php` file.
 
@@ -188,11 +188,11 @@ Therefore we seek to have a little history of backups with the help of **rsnapsh
 Compile and install in userspace `./configure --prefix=$HOME`
 [rsnapshot](https://github.com/rsnapshot/rsnapshot/blob/master/INSTALL.md).
 
-Create a file `/home/gnuoctave/etc/rsnapshot/digitialocean.conf`
+Create a file `/home/gnuoctave/etc/rsnapshot/digital-ocean.conf`
 and replace **EVERY** space with a tab:
 ```
 config_version 1.2
-snapshot_root /home/gnuoctave/backup/digitialocean_snapshots/
+snapshot_root /home/gnuoctave/backup/digital-ocean-snapshots/
 cmd_cp /bin/cp
 cmd_rm /bin/rm
 cmd_rsync /usr/bin/rsync
@@ -204,14 +204,14 @@ interval weekly 4
 interval monthly 3
 verbose 2
 loglevel 4
-logfile /home/gnuoctave/backup/logs/rsnapshot.log
+logfile /home/gnuoctave/backup/logs/rsnapshot/digital-ocean.log
 rsync_long_args --delete --numeric-ids --delete-excluded
-lockfile /home/gnuoctave/backup/rsnapshot.pid
-backup /home/gnuoctave/backup/digitialocean/ digitialocean/
+lockfile /home/gnuoctave/backup/run/rsnapshot/digital-ocean.pid
+backup /home/gnuoctave/backup/digital-ocean/ digital-ocean/
 ```
 Finally test the configuration file:
 ```
-/home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digitialocean.conf configtest
+/home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digital-ocean.conf configtest
 ```
 Establish a cronjob:
 ```
@@ -223,9 +223,9 @@ Establish a cronjob:
 #|    |        |       |       day of the week (0-6 with 0=Sunday)#
 #|    |        |       |       |       commands                   #
 ###################################################################
-10    01       *       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digitialocean.conf daily
-10    02       *       *       0        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digitialocean.conf weekly
-10    03       1       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digitialocean.conf monthly
+10    01       *       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digital-ocean.conf daily
+10    02       *       *       0        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digital-ocean.conf weekly
+10    03       1       *       *        /home/gnuoctave/bin/rsnapshot -c /home/gnuoctave/etc/rsnapshot/digital-ocean.conf monthly
 ```
 
 ## buildbot.octave.org
