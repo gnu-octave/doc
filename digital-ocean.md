@@ -149,11 +149,13 @@ The script `/root/bin/sync-repos.sh`:
 ```
 #!/bin/bash
 
-OCTAVE_REPO_DIR=/var/www/hg.octave.org/repos/octave
+OCTAVE_REPO_DIR=/var/www/hg.octave.org/repos/octave/
+MXE_REPO_DIR=/var/www/hg.octave.org/repos/mxe-octave/
 
 cd ${OCTAVE_REPO_DIR}
 hg pull
 chown -R root:www-data ${OCTAVE_REPO_DIR}
+chown -R mxe:www-data  ${MXE_REPO_DIR}
 ```
 
 ## Backup
