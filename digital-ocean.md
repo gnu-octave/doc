@@ -89,9 +89,6 @@ cd /var/www/wiki.octave.org
 wget https://releases.wikimedia.org/mediawiki/1.35/mediawiki-1.35.6.tar.gz
 ```
 Install following skins and plugins:
-- https://www.mediawiki.org/wiki/Skin:Minerva_Neue
-- https://www.mediawiki.org/wiki/Extension:FontAwesome
-- https://www.mediawiki.org/wiki/Extension:Math
 - https://www.mediawiki.org/wiki/Extension:MobileFrontend
 - https://www.mediawiki.org/wiki/Extension:PageNotice
 
