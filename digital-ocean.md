@@ -244,3 +244,71 @@ Unmask the systemd buildbot service and now starting the buildbot server with
 ```
 /etc/init.d/buildbot restart
 ```
+
+
+## GitHub synchronization
+
+- The work happens in a folder `/opt/github_repo_sync`.
+- Add the public key `cat /root/.ssh/id_rsa.pub` to your GitHub account as "authentication key".
+  Currently, @siko1056 has this key assigned to his account.
+  If there is a problem: regenerate the key and assign the new key to another repository.
+
+### Octave Packages
+
+Sync https://github.com/gnu-octave/packages to https://github.com/gnu-octave/packages-sandbox.
+
+Clone the original repository and set the sandbox as upstream:
+```
+cd /opt/github_repo_sync
+git clone https://github.com/gnu-octave/packages.git
+cd /opt/github_repo_sync/packages
+git remote add sandbox git@github.com:gnu-octave/packages-sandbox.git
+```
+
+Create a file `/opt/github_repo_sync/package_sandbox_do_update.sh`:
+```
+#!/bin/bash
+
+cd /opt/github_repo_sync/packages
+git pull origin
+git push --force sandbox
+```
+
+Setup a CronJob `crontab -e`:
+```
+ *    0        *       *       *        /opt/github_repo_sync/package_sandbox_do_update.sh
+```
+
+### Octave Git mirrow
+
+> **WARNING affecting downstream users (forks, etc.)**
+> 
+> Optimally, the folder `/opt/github_repo_sync/octave` with the hg to git converted Octave repository
+> **should NEVER get lost**.
+> The conversion tool cannot reproduce the same git commit IDs, thus loosing the original folder
+> means a restart of the Octave GitHub mirrow project.
+
+Sync and convert https://www.octave.org/hg/octave to https://github.com/gnu-octave/octave.
+
+Install:
+```
+pip install git-remote-hg
+```
+
+Create a file `/opt/github_repo_sync/octave_do_update.sh`:
+```
+#!/bin/bash
+
+cd /opt/github_repo_sync/octave
+git fetch origin  # https://www.octave.org/hg/octave"
+git checkout stable
+git pull
+git checkout default
+git pull
+git push --tags github default stable  # https://github.com/gnu-octave/octave
+```
+
+Setup a CronJob `crontab -e`:
+```
+*/5   *        *       *       *        /opt/github_repo_sync/octave_do_update.sh
+```
