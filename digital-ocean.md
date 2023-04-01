@@ -312,3 +312,24 @@ Setup a CronJob `crontab -e`:
 ```
 */5   *        *       *       *        /opt/github_repo_sync/octave_do_update.sh
 ```
+
+Restarting the project (read warning above):
+```
+cd /opt/github_repo_sync
+git clone "hg::https://www.octave.org/hg/octave"
+
+# Use compression to shrink 2 GB to 200 MB.
+git gc --aggressive
+
+git remote add github git@github.com:gnu-octave/octave.git
+
+# Default "master" branch is immediately available.
+# Create local "stable" and "default" branch.
+git checkout branches/stable
+git branch -m stable
+git checkout branches/default
+git branch -m default
+
+# Push with release tags.
+git push --tags github default stable
+```
