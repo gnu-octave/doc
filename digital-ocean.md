@@ -299,18 +299,25 @@ Create a file `/opt/github_repo_sync/octave_do_update.sh`:
 ```
 #!/bin/bash
 
+export PATH=$PATH:/usr/local/bin
+
 cd /opt/github_repo_sync/octave
 git fetch origin  # https://www.octave.org/hg/octave"
 git checkout stable
-git pull
+git pull --ff-only
 git checkout default
-git pull
+git pull --ff-only
 git push --tags github default stable  # https://github.com/gnu-octave/octave
 ```
 
 Setup a CronJob `crontab -e`:
 ```
 */5   *        *       *       *        /opt/github_repo_sync/octave_do_update.sh
+```
+
+Test the CronJob (clean environment):
+```
+env - /bin/bash /opt/github_repo_sync/octave_do_update.sh
 ```
 
 Restarting the project (read warning above):
