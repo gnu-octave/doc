@@ -303,11 +303,21 @@ export PATH=$PATH:/usr/local/bin
 
 cd /opt/github_repo_sync/octave
 git fetch origin  # https://www.octave.org/hg/octave"
-git checkout stable
-git pull --ff-only
-git checkout default
-git pull --ff-only
-git push --tags github default stable  # https://github.com/gnu-octave/octave
+unset git_branches
+for hg_branch in $(git branch --remote --list origin/branches/*)
+do
+    hg_branch=${hg_branch#*/}
+    git_branch=${hg_branch#*/}
+    git_branches+=( ${git_branch} )
+    if ! $(git show-ref --quiet refs/heads/${git_branch})
+    then
+        git checkout ${hg_branch}
+        git branch --move ${git_branch}
+    fi
+    git checkout ${git_branch}
+    git pull --ff-only
+done
+git push --tags github ${git_branches[@]}  # https://github.com/gnu-octave/octave
 ```
 
 Setup a CronJob `crontab -e`:
