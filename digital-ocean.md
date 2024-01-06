@@ -24,7 +24,22 @@ vdb     254:16   0  474K  1 disk
 
 ```
 apt install -y fail2ban
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+```
+Make one change in `/etc/fail2ban/jail.local`:
+```diff
+[apache-badbots]
 
+# Ban hosts which agent identifies spammer robots crawling the web
+# for email addresses. The mail outputs are buffered.
++enabled  = true
+```
+Modify `diff /etc/fail2ban/filter.d/apache-badbots.conf /etc/fail2ban/filter.d/apache-badbots.conf.orig`:
+```diff
++badbotscustom = EmailCollector|WebEMailExtrac|TrackBack/1\.02|sogou music spider|(?:Mozilla/\d+\.\d+ )?Jorgee|Bytespider|Amazonbot|DotBot|PetalBot|bingbot
+-badbotscustom = EmailCollector|WebEMailExtrac|TrackBack/1\.02|sogou music spider|(?:Mozilla/\d+\.\d+ )?Jorgee
++failregex = ^hg.octave.org:[0-9]* <HOST> -.*"(GET|POST|HEAD).*HTTP.*".*(?:%(badbots)s|%(badbotscustom)s).*"$
+-failregex = ^<HOST> -.*"(GET|POST|HEAD).*HTTP.*"(?:%(badbots)s|%(badbotscustom)s)"$
 ```
 
 ## Apache LAMP stack
@@ -66,6 +81,15 @@ wiki.octave.org
 www.octave.org
 ```
 
+Create `/var/www/robots.txt` with the following content: 
+```
+User-agent: Amazonbot
+Disallow: /hg.octave.org/
+
+User-agent: *
+Disallow: /hg.octave.org/
+```
+
 ## `/etc/apache/sites-available` setup
 
 - Copy Apache config files from this repo `2022-10-29-digital-ocean-apache2-configs` to `/etc/apache/sites-available` (e.g. SFTP program).
@@ -104,17 +128,25 @@ mkdir -p /var/www/hg.octave.org/repos
 cp /usr/share/doc/mercurial-common/examples/hgweb.cgi /var/www/hg.octave.org/
 cd /var/www/hg.octave.org/
 ```
-Create `hgweb.config` with the following content:
+Create `/var/www/hg.octave.org/hgweb.config` with the following content:
 ```
 [paths]
 / = /var/www/hg.octave.org/repos/*
 
 [web]
 encoding = utf-8
-allow_archive = zip, gz, bz2
+#allow_archive = zip, gz, bz2
 
 [extensions]
 highlight =
+```
+Create `/var/www/hg.octave.org/robots.txt` with the following content:
+```
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: *
+Disallow: /
 ```
 Further in each repository, e.g. `/var/www/hg.octave.org/repos/web-octave/.hg/hgrc` one can enter information like:
 ```
