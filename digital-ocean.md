@@ -98,6 +98,39 @@ Disallow: /hg.octave.org/
 - Check configuration `apache2ctl -S`.
 - Get Let's Encrypt certificates `/snap/bin/certbot --apache`
 
+## Monit
+
+Used for monitoring Apache2 and restart in out-of-memory DDoS attacks.
+```
+apt install monit
+cp /etc/monit/conf-available/apache2 /etc/monit/conf-enabled/
+```
+Add to `/etc/monit/monitrc`:
+```
+set httpd port 2812 and
+    use address localhost
+    allow localhost
+```
+Finally:
+```
+$ systemctl enable monit
+$ systemctl start  monit
+$ monit summary
+Monit 5.27.2 uptime: 16m
+┌─────────────────────────────────┬────────────────────────────┬───────────────┐
+│ Service Name                    │ Status                     │ Type          │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ digital-ocean-1                 │ OK                         │ System        │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ apache                          │ OK                         │ Process       │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ apache_bin                      │ OK                         │ File          │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ apache_rc                       │ OK                         │ File          │
+└─────────────────────────────────┴────────────────────────────┴───────────────┘
+```
+
+
 ## MediaWiki
 
 <https://www.mediawiki.org/wiki/Manual:Running_MediaWiki_on_Debian_or_Ubuntu>
