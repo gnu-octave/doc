@@ -204,7 +204,7 @@ pip install pygments
 #|    |        |       |       |       commands                   #
 ###################################################################
 */5   *        *       *       *        /root/bin/sync-repos.sh
- 5    0        *       *       *        /root/bin/backup-to-dreamhost.sh
+ 5    0        *       *       *        /root/bin/backup.sh
 ```
 
 The script `/root/bin/sync-repos.sh`:
@@ -222,11 +222,11 @@ chown -R mxe:www-data  ${MXE_REPO_DIR}
 
 ## Backup
 
-The backup of the Digital Ocean server is sent daily to the Dreamhost server from jwe.
+The backup of the Digital Ocean server is sent daily to a private server of jwe.
 
 ### Digital Ocean side
 
-Run the script `/root/bin/backup-to-dreamhost.sh` in a daily cronjob:
+Run the script `/root/bin/backup.sh` in a daily cronjob:
 
 ```bash
 #!/bin/bash
@@ -237,16 +237,17 @@ rm -Rf ${WIKI_DB_BACKUP_FILE}
 mysqldump -h hostname -u userid --password=password dbname \
     | gzip > ${WIKI_DB_BACKUP_FILE}
 
-rsync -az --delete /var/www/ \
-    gnuoctave@backup.octave.org:/home/gnuoctave/backup/digital-ocean/web
+rsync --archive --no-owner --no-group --compress --delete \
+    -e "ssh -p PORT -l USER" /var/www/ jwe-server.org:backup/path
 ```
-Lookup the values for `mysqldump` in wiki's `LocalSettings.php` file.
+Lookup the values for `mysqldump` in wiki's `LocalSettings.php` file
+and setup public key authentication with JWEs home server.
 
-### Dreamhost side
+### JWE home server side
 
-Just sending the latest Digital Ocean server state to Dreamhost is not failsafe enough.
+Just sending the latest Digital Ocean server state to the backup server is not failsafe enough.
 If some bad deletion happens on Digital Ocean,
-after 24h this mistake is synchonized with Dreamhost as well.
+after 24h this mistake is synchonized with the backup server as well.
 Therefore we seek to have a little history of backups with the help of **rsnapshot**.
 
 Compile and install in userspace `./configure --prefix=$HOME`
