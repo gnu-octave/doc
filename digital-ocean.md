@@ -510,6 +510,8 @@ Find volume path via:
 docker volume ls
 docker volume inspect octave-buildbot-master
 ```
+For example:
+```
 $ ls -al /var/lib/docker/volumes/octave-buildbot-master/_data
 total 484844
 drwxr-xr-x 3 root root      4096 Apr  9 15:31 .
