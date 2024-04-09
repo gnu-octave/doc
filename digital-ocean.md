@@ -8,16 +8,19 @@
 apt install -y bundler curl emacs git htop mercurial screen vim zip
 ```
 
+Install Docker https://docs.docker.com/engine/install/debian/#install-using-the-repository.
+
 ## Harddisk setup
 
 ```
 # lsblk 
-NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-vda     254:0    0   80G  0 disk 
-├─vda1  254:1    0 79.9G  0 part /
-├─vda14 254:14   0    3M  0 part 
-└─vda15 254:15   0  124M  0 part /boot/efi
-vdb     254:16   0  474K  1 disk 
+NAME    MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda       8:0    0    50G  0 disk /var/www/nightly.octave.org
+vda     254:0    0    80G  0 disk 
+|-vda1  254:1    0  79.9G  0 part /
+|-vda14 254:14   0     3M  0 part 
+`-vda15 254:15   0   124M  0 part /boot/efi
+vdb     254:16   0   474K  1 disk
 ```
 
 ## Fail2Ban - Firewall
@@ -60,6 +63,7 @@ apt install -y snapd python3-augeas
 snap install core
 snap refresh core
 snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot/emi
 ```
 
 ## `/var/www` setup
@@ -415,4 +419,87 @@ git branch -m default
 
 # Push with release tags.
 git push --tags github default stable
+```
+
+Add crontab entry:
+```
+# crontab -l
+###################################################################
+#minute (0-59),                                                   #
+#|    hour (0-23),                                                #
+#|    |        day of the month (1-31),                           #
+#|    |        |       month of the year (1-12),                  #
+#|    |        |       |       day of the week (0-6 with 0=Sunday)#
+#|    |        |       |       |        commands                  #
+###################################################################
+*/5   *        *       *       *        curl https://savannah.octave.org/api.php?Action=update
+```
+
+# savannah.octave.org
+
+Setup the project https://github.com/gnu-octave/SavannahAPI via Docker-compose.
+```
+cd /opt
+git clone https://github.com/gnu-octave/SavannahAPI
+cd /var/www/savannah.octave.org/SavannahAPI
+docker compose up --detach server-init
+docker compose up --detach server
+```
+The data is stored in a Docker volume.
+Find volume path via:
+```
+docker volume ls
+docker volume inspect savannahapi_savannah_data
+```
+Ensure that the folder and SQLite database `savannah.cache.sqlite`
+is owned and writable by user `www-data`:
+```
+$ ls -al /var/lib/docker/volumes/savannahapi_savannah_data/_data
+total 93520
+drwxr-xr-x 2 www-data www-data     4096 Apr  9 14:50 .
+drwx-----x 3 root     root         4096 Apr  7 15:22 ..
+-rw-r--r-- 1 root     root            0 Apr  7 15:21 .gitkeep
+-rw-r--r-- 1 www-data www-data 95752192 Apr  9 14:50 savannah.cache.sqlite
+```
+
+# nightly.octave.org
+
+This project is basically a single Docker container launched and updated
+by a script `update-buildbot-nighty.sh` which mounts two secret files:
+1. `authorized_keys`: the public key of the Buildbot worker (currently JWE)
+2. `master.cfg`: An adapted version for <https://nightly.octave.org> of
+   <https://github.com/gnu-octave/octave-buildbot/blob/68eb6d369fec80e0ed17bc6ca5a186e0ce424d7a/master/defaults/master.cfg>
+```
+$ ls -al /opt/Buildbot
+total 36
+drwxr-xr-x 2 root root  4096 Apr  9 15:20 .
+drwxr-xr-x 7 root root  4096 Apr  9 14:56 ..
+-rw-r--r-- 1 root root   574 Apr  9 15:20 authorized_keys
+-rw-r--r-- 1 root root 17188 Apr  9 15:12 master.cfg
+-rwxr-xr-x 1 root root   579 Apr  9 15:13 update-buildbot-nighty.sh
+```
+
+The script `update-buildbot-nighty.sh` is as follows and is run like a normal BASH script
+to launch or update the Buildbot master:
+```
+#!/bin/bash
+
+docker pull docker.io/gnuoctave/buildbot:latest-master
+
+docker stop octave-buildbot-master
+docker rm   octave-buildbot-master
+
+docker create \
+  --volume octave-buildbot-master:/buildbot/master \
+  --volume $(pwd)/master.cfg:/buildbot/master/master.cfg \
+  --volume $(pwd)/authorized_keys:/root/.ssh/authorized_keys \
+  --volume /var/www/nightly.octave.org:/buildbot/data \
+  --publish 8070:8010 \
+  --publish 9989:9989 \
+  --publish 9988:22 \
+  --name   octave-buildbot-master \
+  gnuoctave/buildbot:latest-master
+
+docker start octave-buildbot-master
+docker ps -a
 ```
