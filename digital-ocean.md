@@ -503,3 +503,24 @@ docker create \
 docker start octave-buildbot-master
 docker ps -a
 ```
+
+The Buildbot master state is stored in a Docker volume.
+Find volume path via:
+```
+docker volume ls
+docker volume inspect octave-buildbot-master
+```
+$ ls -al /var/lib/docker/volumes/octave-buildbot-master/_data
+total 484844
+drwxr-xr-x 3 root root      4096 Apr  9 15:31 .
+drwx-----x 3 root root      4096 Apr  7 17:01 ..
+drwxr-xr-x 3 root root      4096 Nov  4  2021 app
+-rw-r--r-- 1 root root      1024 Apr  1  2021 buildbot.tac
+-rw-r--r-- 1 root root   9207831 Apr  9 15:22 http.log
+-rw-r--r-- 1 root root     17179 Apr  7 18:04 master.cfg
+-rw-r--r-- 1 root root      4051 Oct 14  2022 master.cfg.sample
+-rw-r--r-- 1 root root 280834048 Apr  9 15:31 state.sqlite
+-rwxr-xr-x 1 root root       642 Jun  7  2021 tidy_up.sh
+-rw-r--r-- 1 root root   6329096 Apr  9 15:24 twistd.log
+-rw-r--r-- 1 root root         1 Apr  9 15:13 twistd.pid
+```
