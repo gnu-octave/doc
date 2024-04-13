@@ -493,7 +493,7 @@ docker create \
   --volume octave-buildbot-master:/buildbot/master \
   --volume $(pwd)/master.cfg:/buildbot/master/master.cfg \
   --volume $(pwd)/authorized_keys:/root/.ssh/authorized_keys \
-  --volume /var/www/nightly.octave.org:/buildbot/data \
+  --volume /var/www/nightly.octave.org/data:/buildbot/data \
   --publish 8070:8010 \
   --publish 9989:9989 \
   --publish 9988:22 \
