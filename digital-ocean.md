@@ -497,6 +497,7 @@ docker create \
   --publish 8070:8010 \
   --publish 9989:9989 \
   --publish 9988:22 \
+  --restart always \
   --name   octave-buildbot-master \
   gnuoctave/buildbot:latest-master
 
