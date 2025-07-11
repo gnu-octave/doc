@@ -108,7 +108,11 @@ Used for monitoring Apache2 and restart in out-of-memory DDoS attacks.
 ```
 apt install monit
 cp /etc/monit/conf-available/apache2 /etc/monit/conf-enabled/
+cp /etc/monit/conf-available/mysql   /etc/monit/conf-enabled/mariadb
 ```
+Change `/etc/monit/conf-enabled/mariadb`: replace 3x `/etc/init.d/mysql` with `etc/init.d/mariadb`,
+see <https://wpbeaches.com/set-monit-to-monitor-mariadb-on-a-cloudpanel-instance-on-ubuntu-22-04/#mariadb>.
+
 Add to `/etc/monit/monitrc`:
 ```
 set httpd port 2812 and
@@ -126,7 +130,13 @@ Monit 5.27.2 uptime: 16m
 ├─────────────────────────────────┼────────────────────────────┼───────────────┤
 │ digital-ocean-1                 │ OK                         │ System        │
 ├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ mysqld                          │ OK                         │ Process       │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
 │ apache                          │ OK                         │ Process       │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ mysql_bin                       │ OK                         │ File          │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ mysql_rc                        │ OK                         │ File          │
 ├─────────────────────────────────┼────────────────────────────┼───────────────┤
 │ apache_bin                      │ OK                         │ File          │
 ├─────────────────────────────────┼────────────────────────────┼───────────────┤
