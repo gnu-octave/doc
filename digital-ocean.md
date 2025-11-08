@@ -379,6 +379,27 @@ Create a file `/opt/github_repo_sync/octave_do_update.sh`:
 ```
 #!/bin/bash
 
+export LOCKDIR=/tmp/lock-github-sync
+
+if ! mkdir "$LOCKDIR"; then
+  echo >&2 "Failed to create lock directory '$LOCKDIR'"
+  exit 1
+fi
+
+# Remove the lock directory on exit or error
+cleanup() {
+    if rmdir -- "$LOCKDIR"; then
+        echo "Finished"
+    else
+        echo >&2 "Failed to remove lock directory '$LOCKDIR'"
+        exit 1
+    fi
+}
+
+trap "cleanup" EXIT
+
+echo "Acquired lock, running"
+
 export PATH=$PATH:/usr/local/bin
 
 cd /opt/github_repo_sync/octave
