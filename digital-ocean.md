@@ -423,7 +423,7 @@ git push --tags github ${git_branches[@]}  # https://github.com/gnu-octave/octav
 
 Setup a CronJob `crontab -e`:
 ```
-*/5   *        *       *       *        /opt/github_repo_sync/octave_do_update.sh
+*/10  *        *       *       *        /opt/github_repo_sync/octave_do_update.sh
 ```
 
 Test the CronJob (clean environment):
