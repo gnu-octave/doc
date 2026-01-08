@@ -356,7 +356,7 @@ git push --force sandbox
 
 Setup a CronJob `crontab -e`:
 ```
- *    0        *       *       *        /opt/github_repo_sync/package_sandbox_do_update.sh
+ 0    0        *       *       *        /opt/github_repo_sync/package_sandbox_do_update.sh
 ```
 
 ### Octave Git mirrow
