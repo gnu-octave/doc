@@ -359,14 +359,14 @@ Setup a CronJob `crontab -e`:
  0    0        *       *       *        /opt/github_repo_sync/package_sandbox_do_update.sh
 ```
 
-### Octave Git mirrow
+### Octave Git mirror
 
 > **WARNING affecting downstream users (forks, etc.)**
 > 
 > Optimally, the folder `/opt/github_repo_sync/octave` with the hg to git converted Octave repository
 > **should NEVER get lost**.
 > The conversion tool cannot reproduce the same git commit IDs, thus loosing the original folder
-> means a restart of the Octave GitHub mirrow project.
+> means a restart of the Octave GitHub mirror project.
 
 Sync and convert https://www.octave.org/hg/octave to https://github.com/gnu-octave/octave.
 
@@ -403,7 +403,7 @@ echo "Acquired lock, running"
 export PATH=$PATH:/usr/local/bin
 
 cd /opt/github_repo_sync/octave
-git fetch origin  # https://www.octave.org/hg/octave"
+git fetch origin  # hg::/var/www/hg.octave.org/repos/octave
 unset git_branches
 for hg_branch in $(git branch --remote --list origin/branches/*)
 do
@@ -434,7 +434,7 @@ env - /bin/bash /opt/github_repo_sync/octave_do_update.sh
 Restarting the project (read warning above):
 ```
 cd /opt/github_repo_sync
-git clone "hg::https://www.octave.org/hg/octave"
+git clone "hg::/var/www/hg.octave.org/repos/octave"
 
 # Use compression to shrink 2 GB to 200 MB.
 git gc --aggressive
